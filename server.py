@@ -1,3 +1,4 @@
+import json
 from mcp.server.mcpserver import MCPServer
 from database import get_connection
 
@@ -18,7 +19,18 @@ def get_companies():
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "name": row[1],
+            "role": row[2],
+            "location": row[3],
+            "status": row[4]
+        }
+        for row in rows
+    ])
+
+
 @mcp.tool()
 def get_applications():
     """Get all job applications stored in the database."""
@@ -33,7 +45,18 @@ def get_applications():
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "company_id": row[1],
+            "applied_date": row[2],
+            "status": row[3],
+            "notes": row[4]
+        }
+        for row in rows
+    ])
+
+
 @mcp.tool()
 def get_interviews():
     """Get all interviews stored in the database."""
@@ -48,10 +71,21 @@ def get_interviews():
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "application_id": row[1],
+            "interview_date": row[2],
+            "round": row[3],
+            "result": row[4]
+        }
+        for row in rows
+    ])
+
+
 @mcp.tool()
 def get_application_details():
-    """Get job applications with company names and job roles."""
+    """Get complete application information."""
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -71,10 +105,22 @@ def get_application_details():
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "company": row[1],
+            "role": row[2],
+            "applied_date": row[3],
+            "status": row[4],
+            "notes": row[5]
+        }
+        for row in rows
+    ])
+
+
 @mcp.tool()
 def search_applications_by_status(status: str):
-    """Search job applications by their status."""
+    """Search job applications by status."""
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -95,7 +141,19 @@ def search_applications_by_status(status: str):
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "company": row[1],
+            "role": row[2],
+            "applied_date": row[3],
+            "status": row[4],
+            "notes": row[5]
+        }
+        for row in rows
+    ])
+
+
 @mcp.tool()
 def search_applications_by_company(company_name: str):
     """Search job applications by company name."""
@@ -119,7 +177,18 @@ def search_applications_by_company(company_name: str):
     rows = cursor.fetchall()
     connection.close()
 
-    return rows
+    return json.dumps([
+        {
+            "id": row[0],
+            "company": row[1],
+            "role": row[2],
+            "applied_date": row[3],
+            "status": row[4],
+            "notes": row[5]
+        }
+        for row in rows
+    ])
+
 
 if __name__ == "__main__":
     mcp.run()
